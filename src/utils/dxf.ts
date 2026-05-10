@@ -534,7 +534,7 @@ const createFeatureEntity = (
 
     const lines: string[] = [];
 
-    if (rule?.dxfCells?.length > 0) {
+    if (rule && rule.dxfCells && rule.dxfCells.length > 0) {
       append(lines, createIconAtPoint(lng, lat, rule));
     } else {
       append(lines, createCircleMarker(lng, lat));
