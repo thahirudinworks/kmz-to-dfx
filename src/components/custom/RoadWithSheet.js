@@ -1,0 +1,9 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+const RoadWidthSheet = ({ open, onOpenChange, roadWidthMeter, setRoadWidthMeter, detectedRoadWidthMeter, roadCount, }) => {
+    return (_jsx(Sheet, { open: open, onOpenChange: onOpenChange, children: _jsxs(SheetContent, { className: "w-[380px] sm:max-w-md", children: [_jsxs(SheetHeader, { children: [_jsx(SheetTitle, { children: "Atur Lebar Jalan" }), _jsx(SheetDescription, { children: "Lebar jalan memakai satuan meter. Jika OSM punya data width/lanes, nilainya otomatis masuk ke input dan tetap bisa kamu ubah." })] }), _jsxs("div", { className: "mt-6 space-y-5", children: [_jsxs("div", { className: "rounded-lg border p-4", children: [_jsx("div", { className: "mb-2 text-sm font-medium", children: "Status Data Jalan" }), _jsxs("div", { className: "flex flex-wrap gap-2", children: [_jsxs(Badge, { variant: "secondary", children: [roadCount, " jalan tampil"] }), detectedRoadWidthMeter ? (_jsxs(Badge, { children: ["OSM: ", detectedRoadWidthMeter, " m"] })) : (_jsx(Badge, { variant: "outline", children: "OSM width tidak tersedia" }))] })] }), _jsxs("div", { className: "space-y-2", children: [_jsx(Label, { children: "Lebar Jalan Custom" }), _jsx("div", { className: "flex items-center gap-2", children: _jsx(Input, { type: "number", min: "0", step: "0.1", value: roadWidthMeter, onChange: (e) => setRoadWidthMeter(e.target.value), placeholder: "Contoh: 7" }) }), _jsx("p", { className: "text-xs text-muted-foreground", children: "Kosongkan input jika ingin kembali mengikuti data OSM. Jika OSM juga kosong, jalan tidak akan dipaksa memiliki lebar fallback." })] })] })] }) }));
+};
+export default RoadWidthSheet;
