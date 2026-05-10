@@ -149,31 +149,16 @@ export const buildRoadPolygonGeojson = (
   }
 }
 
-const OVERPASS_ENDPOINTS = [
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.openstreetmap.ru/api/interpreter',
-  'https://overpass-api.de/api/interpreter',
-]
-
 const fetchOverpass = async (query: string): Promise<any> => {
-  let lastError: unknown
+  const response = await fetch('/api/overpass', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: query,
+  })
 
-  for (const endpoint of OVERPASS_ENDPOINTS) {
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: query,
-      })
+  if (!response.ok) throw new Error(`Overpass proxy error: HTTP ${response.status}`)
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-
-      return await response.json()
-    } catch (err) {
-      lastError = err
-    }
-  }
-
-  throw lastError
+  return response.json()
 }
 
 export const fetchBuildingsInsideArea = async (
