@@ -149,6 +149,33 @@ export const buildRoadPolygonGeojson = (
   }
 }
 
+const OVERPASS_ENDPOINTS = [
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter',
+  'https://overpass-api.de/api/interpreter',
+]
+
+const fetchOverpass = async (query: string): Promise<any> => {
+  let lastError: unknown
+
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: query,
+      })
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      return await response.json()
+    } catch (err) {
+      lastError = err
+    }
+  }
+
+  throw lastError
+}
+
 export const fetchBuildingsInsideArea = async (
   bounds: L.LatLngBounds,
   polygonGeojson: any
@@ -169,12 +196,7 @@ export const fetchBuildingsInsideArea = async (
     out skel qt;
   `
 
-  const response = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: query,
-  })
-
-  const osmJson = await response.json()
+  const osmJson = await fetchOverpass(query)
   const buildingGeojson = osmtogeojson(osmJson)
 
   return filterBuildingsInsidePolygons(buildingGeojson, polygonGeojson)
@@ -197,12 +219,7 @@ export const fetchRawRoadsInsideArea = async (bounds: L.LatLngBounds) => {
     out skel qt;
   `
 
-  const response = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: query,
-  })
-
-  const osmJson = await response.json()
+  const osmJson = await fetchOverpass(query)
 
   return osmtogeojson(osmJson)
 }
